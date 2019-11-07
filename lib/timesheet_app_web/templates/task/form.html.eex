@@ -1,0 +1,39 @@
+<form>
+  <%= form_for @changeset, @action, fn f -> %>
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p>Oops, something went wrong! Please check the errors below.</p>
+      </div>
+    <% end %>
+
+    <div class="row">
+      <div class="col-2">
+        <div class="form-group" aria-label="hours worked">
+          <%= select f, :hours_worked, 1..12 %>
+          <%= error_tag f, :hours_worked %>
+        </div>
+      </div>
+
+      <div class="col-6">
+        <div class="form-group" aria-label="note">
+          <%= text_input f, :note %>
+          <%= error_tag f, :note %>
+        </div>
+      </div>
+   
+      <div class="col-3">
+        <div class="form-group" aria-label="job code">
+          <%= select f, :job_id, TimesheetApp.Jobs.list_job_codes() %>
+          <%= error_tag f, :job_id %>
+        </div>
+      </div>
+    
+      <div class="col-1">
+        <div>
+          <%= submit "Save", class: "btn btn-primary btn-sm" %>
+        </div>
+      </div>
+  
+    </div>  
+  <% end %>
+</form>

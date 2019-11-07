@@ -1,0 +1,55 @@
+<h1>Show Job</h1>
+
+<ul>
+  <li><strong>Budget hours:</strong><%= @job.budget_hours %></li>
+  <li><strong>Description:</strong><%= @job.description %></li>
+  <li><strong> Job ID:</strong><%= @job.id %></li>
+  <li><strong>Job code:</strong><%= @job.job_code %></li>
+  <li><strong>Job Name:</strong><%= @job.name %></li>
+  <li><strong>Manager Name:</strong><%= TimesheetApp.Users.get_user(@job.user_id).name %></li>
+</ul>
+
+<h2>Job Tasks</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Task Date</th>
+      <th>Hours Worked</th>
+      <th>Worker</th>
+      <th>Note</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= for task <- @job.tasks do %>
+      <tr>
+        <td><%= TimesheetApp.Timesheets.get_timesheet!(task.timesheet_id).date %></td>
+        <td> <%= task.hours_worked%> </td>
+        <td> <%= TimesheetApp.Users.get_user(task.user_id).name %> </td>
+        <td> <%= task.note %> </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="row">
+  <div class="col-4"><strong>Total Hours Worked:</strong>
+    <%= TimesheetApp.Jobs.get_hours_spent(@job.id) %>
+  </div>
+  <div class="col-4"> Budget Hours:  <%= @job.budget_hours %></div>
+  <div class="col-4"> Hours Left: <%= TimesheetApp.Jobs.get_hours_left(@job.id)  %> </div>
+</div>
+
+<br />
+<%= if TimesheetApp.Jobs.get_hours_left(@job.id) < 0 do %>
+  <div class="alert alert-danger">Job over billed.</div>
+<% end %>
+
+<br />
+
+<span><%= link "Edit Job", to: Routes.job_path(@conn, :edit, @job) %></span> |
+<span><%= link "Delete", to: Routes.job_path(@conn, :delete, @job), 
+  method: :delete, data: [confirm: "Are you sure?"] %></span> |
+<span><%= link "Back", to: Routes.job_path(@conn, :index) %></span>

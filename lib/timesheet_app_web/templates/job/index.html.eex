@@ -1,0 +1,41 @@
+<h1>Listing Jobs</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Job code</th>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Manager</th>
+      <th>Budgeted hours</th>
+      <th>Hours Spent</th>
+      <th>Hours Remaining</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+  <%= for job <- @jobs do %>
+    <%= if TimesheetApp.Jobs.get_hours_spent(job.id) > job.budget_hours do %>
+      <tr class="table-danger">
+    <% else %>
+      <tr>
+    <% end %>
+      <td><%= job.job_code %></td>
+      <td><%= job.name %></td>
+      <td><%= job.description %></td>
+      <td><%= TimesheetApp.Users.get_user(job.user_id).name %></td>
+      <td><%= job.budget_hours %></td>
+      <td><%= TimesheetApp.Jobs.get_hours_spent(job.id) %> </td>
+      <td><%= job.budget_hours - TimesheetApp.Jobs.get_hours_spent(job.id)  %> </td>
+      <td>
+        <span><%= link "Show", to: Routes.job_path(@conn, :show, job) %></span>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<div>Jobs that are overbudget are indicated in red. </div>
+<br />
+<span><%= link "New Job", to: Routes.job_path(@conn, :new) %></span>

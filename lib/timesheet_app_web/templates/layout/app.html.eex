@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>TimesheetApp · Phoenix Framework</title>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+  </head>
+  <body>
+    <div class="container">
+
+      <nav class="navbar navbar-expand-sm navbar-light bg-success">
+        <div class="col-4"> 
+          <a class="navbar-brand" href="\">Timesheet</a>
+        </div>
+
+        <%= if @current_user do %>  
+          <div class="col-2">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <%= if @current_user.is_manager do %>
+                  <%= link( "All Users", to: Routes.user_path(@conn, :index)) %>
+                <%= end %>
+              </li>
+            </ul>
+          </div>
+ 
+          <div class="col-2">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <%= if @current_user.is_manager do %>
+                  <%= link( "All Jobs", to: Routes.job_path(@conn, :index)) %>
+                <%= end %>
+              </li>
+            </ul>
+          </div>
+
+          <div class="col-2">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <%= if @current_user.is_manager do %>
+                  <%= link( "Manage Timesheets", to: Routes.user_path(@conn,
+                    :show_manager_timesheets, @current_user)) %>
+                <%= else %>
+                  <%= link( "My Timesheets", to: Routes.user_path(@conn, :show,
+                    @current_user)) %>
+                <%= end %>
+              </li>
+            </ul>  
+          </div>
+
+          <div class="col-2 text-light">
+            <%= link(@current_user.name,
+              to: Routes.user_path(@conn, :show, @current_user)) %>
+              (<%= link("Logout", to: Routes.session_path(@conn, :delete),
+              method: :delete) %>)
+          </div>
+        
+        <% else %>
+          <div class="col-4"></div>
+          <div class="col-4 text-light">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                <%= link("Login", to: Routes.session_path(@conn, :new)) %>
+              </li>
+            </ul>  
+          </div>
+        <% end %>
+        
+      </nav>
+        
+      <div class="row">
+        <div class="col-12">
+          <%= if get_flash(@conn, :info) do %>
+            <p class="alert alert-info" role="alert">
+              <%= get_flash(@conn, :info) %>
+            </p>
+          <% end %>
+          <%= if get_flash(@conn, :error) do %>
+            <p class="alert alert-danger" role="alert">
+              <%= get_flash(@conn, :error) %>
+            </p>
+          <% end %>  
+        </div>
+      </div>
+
+      <%= render @view_module, @view_template, assigns %>
+    </div>
+    
+    <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+  </body>
+</html>

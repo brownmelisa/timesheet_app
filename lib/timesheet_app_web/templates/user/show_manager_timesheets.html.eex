@@ -1,0 +1,72 @@
+<h2>My Profile</h2>
+
+<ul>
+  <li><strong>Name:</strong><%= @user.name %></li>
+  <li><strong>Email:</strong><%= @user.email %></li>
+  <li><strong>Is manager:</strong><%= @user.is_manager %></li>
+</ul>
+
+<h2>Manage Timesheets</h2>
+<p>Click on worker name to see all submitted timesheets for that worker. <br/> 
+Click show to see timesheet details. <br/>
+Time sheets over 8 hours are indicated in red. <br />
+Underbilled time sheets are indicated in yellow. </p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Worker Name</th>
+      <th>Timesheet Date</th>
+      <th>Total Hours</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= for timesheet <- TimesheetApp.Timesheets.list_timesheets() do %>
+      <%= if TimesheetApp.Users.get_user(timesheet.user_id).manager_id == @user.id do %>
+        <%= cond do %>
+          <% timesheet.total_hours > 8 -> %>
+            <tr class="table-danger">
+          <% timesheet.total_hours < 8 -> %>
+            <tr class="table-warning">
+          <% true -> %>
+            <tr>
+        <% end %>
+          <td><%= timesheet.date %></td>
+          <td>
+            <%= link TimesheetApp.Users.get_user(timesheet.user_id).name,
+                to: Routes.user_path(@conn, :show_worker_timesheets, 
+                    TimesheetApp.Users.get_user(timesheet.user_id))  
+            %>
+          </td>
+          <td><%= timesheet.total_hours %></td>
+          <td><%= timesheet.status %></td>
+          <td>
+            <span>
+              <%= link "Show", to: Routes.timesheet_path(@conn, :show, timesheet) %>
+            </span> | 
+            <span>
+              <%= link "Delete", to: Routes.timesheet_path(@conn, :delete, timesheet),
+             method: :delete, data: [confirm: "Are you sure?"] %>
+            </span> |
+            <span>
+              <%= link "Approve", 
+                  to: Routes.timesheet_path(@conn, :approve, timesheet), 
+                  method: :approve %>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+
+
+
+  </tbody>
+
+</table>
+<br/>
+
+<%= link("New Timesheet", to: Routes.timesheet_path(@conn, :new)) %>
+

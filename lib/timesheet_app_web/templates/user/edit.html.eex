@@ -1,0 +1,13 @@
+<h1>Edit User</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.user_path(@conn, :update, @user)) %>
+
+  <%= if @current_user.is_manager do %>
+    <span>
+      <%= link "Back", to: Routes.user_path(@conn, :index) %>
+    </span>
+  <% else %>
+    <span>
+      <%= link "Back", to: Routes.user_path(@conn, :show, @current_user) %>
+    </span>
+  <% end %>

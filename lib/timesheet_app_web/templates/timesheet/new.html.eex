@@ -1,0 +1,13 @@
+<h2 class="top-heading">New Timesheet</h2>
+
+<%= render "form.html", 
+  Map.put(assigns, :action, Routes.timesheet_path(@conn,:create)) 
+%>
+
+<%= if @current_user.is_manager do %>
+  <%= link "Cancel", 
+    to: Routes.user_path(@conn, :show_manager_timesheets,@current_user) %>
+<% else %>
+  <%= link "Cancel", 
+    to: Routes.user_path(@conn, :show, @current_user)%>
+<% end %>

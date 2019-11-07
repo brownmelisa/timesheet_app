@@ -1,0 +1,34 @@
+<h1>Show Task</h1>
+
+<ul>
+
+  <li>
+    <strong>Hours worked:</strong>
+    <%= @task.hours_worked %>
+  </li>
+
+  <li>
+    <strong>Note:</strong>
+    <%= @task.note %>
+  </li>
+
+  <li>
+    <strong>Job ID:</strong>
+    <%= @task.job_id %>
+  </li>
+
+  <li>
+    <strong>Job Code:</strong>
+    <%= @task.job.job_code %>
+  </li>
+
+  <li>
+    <strong>Job Name:</strong>
+    <%= @task.job.name %>
+  </li>
+
+
+</ul>
+
+<span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task) %></span>
+<span><%= link "Back", to: Routes.task_path(@conn, :index) %></span>

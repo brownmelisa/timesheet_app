@@ -1,0 +1,63 @@
+<h1>Show Manager's Jobs</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @user.name %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @user.email %>
+  </li>
+
+  <li>
+    <strong>Is manager:</strong>
+    <%= @user.is_manager %>
+  </li>
+
+</ul>
+
+<h2>My Jobs</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Job Name</th>
+      <th>Job Code</th>
+      <th>Job Description</th>
+      <th>Budget Hours</th>
+      <th>Hours Spent</th>
+      <th>Hours Left</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= for job <- @user.jobs do %>
+    <tr>
+      <td> <%= job.name %> </td>
+      <td> <%= job.job_code %> </td>
+      <td> <%= job.description %> </td>
+      <td> <%= job.budget_hours %> </td>
+      <td> <%= TimesheetApp.Jobs.get_hours_spent(job.id) %> </td>
+      <td> <%= job.budget_hours - TimesheetApp.Jobs.get_hours_spent(job.id)  %> </td>
+      <td>
+        <span><%= link "Show", to: Routes.job_path(@conn, :show, job) %></span>
+        <span><%= link "Edit", to: Routes.job_path(@conn, :edit, job) %></span>
+        <span><%= link "Delete", to: Routes.job_path(@conn, :delete, job), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br/>
+
+<p>
+  <span><%= link("New Timesheet", to: Routes.timesheet_path(@conn, :new)) %></span> |
+  <span><%= link "Edit", to: Routes.user_path(@conn, :edit, @user) %></span> |
+  <span><%= link "Back", to: Routes.user_path(@conn, :index) %></span>
+</p>
+

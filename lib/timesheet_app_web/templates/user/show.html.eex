@@ -1,0 +1,74 @@
+<%= if @current_user.is_manager do %>
+  <h2 class="top-heading">User Information</h2>
+<% else %>
+  <h2 class="top-heading">Worker Information</h2>
+<% end %>
+
+<ul>
+  <li>
+    <strong>Name:</strong>
+    <%= @user.name %>
+  </li>
+  <li>
+    <strong>Email:</strong>
+    <%= @user.email %>
+  </li>
+  <li>
+    <strong>Manager:</strong>
+    <%= if !@user.is_manager do %>
+      <%= TimesheetApp.Users.get_user(@user.manager_id).name %>
+    <% end %> 
+  </li>
+</ul>
+<br />
+
+<h2 class="table-heading">Timesheets</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Timesheet Date</th>
+      <th>Total Hours</th>
+      <th>Status</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= for timesheet <- @user.timesheets do %>
+      <%= cond do %>
+        <% timesheet.total_hours > 8 -> %>
+          <tr class="table-danger">
+        <% timesheet.total_hours < 8 -> %>
+          <tr class="table-warning">
+        <% true -> %>
+          <tr>
+      <% end %>
+      <td> <%= timesheet.date%> </td>
+      <td> <%= timesheet.total_hours%> </td>
+      <td> <%= timesheet.status%> </td>
+      <td>
+        <%= if !@current_user.is_manager do %> 
+          <span>
+            <%= link "Show", to: Routes.timesheet_path(@conn, :show, timesheet) %>
+          </span>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<p>Time sheets over 8 hours are indicated in red. <br />
+Underbilled time sheets are indicated in yellow. </p>
+<br/>
+
+<%= if @current_user.is_manager do %>
+  <%= link("Back", to: Routes.user_path(@conn, :index)) %> |
+  <%= link "Edit User Profile", to: Routes.user_path(@conn, :edit, @user) %>
+<% else %>
+  <p>
+    <span><%= link("New Timesheet", to: Routes.timesheet_path(@conn, :new)) %></span> |
+    <span><%= link "Edit My Profile", to: Routes.user_path(@conn, :edit, @user) %></span>
+  </p>
+<% end %>  
+

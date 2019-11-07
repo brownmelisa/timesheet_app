@@ -1,0 +1,38 @@
+<h1>Listing All Users</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Is Manager</th>
+      <th>Manager Name</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+  <%= for user <- @users do %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.email %></td>
+      <td><%= user.is_manager %></td>
+      <td>
+      <%= if !user.is_manager do %>
+        <%= TimesheetApp.Users.get_user(user.manager_id).name %>
+      <% end %>  
+      <td>
+        <span>
+          <%= link "Show", to: Routes.user_path(@conn, :show, user)%>
+        </span> |
+        <span>
+          <%= link "Edit", to: Routes.user_path(@conn, :edit, user) %>
+        </span> |
+        <span><%= link "Delete", to: Routes.user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New User", to: Routes.user_path(@conn, :new) %></span>

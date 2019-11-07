@@ -1,0 +1,84 @@
+<h1>Show Timesheet</h1>
+
+<ul>
+
+  <li>
+    <strong>Date:</strong>
+    <%= @timesheet.date %>
+  </li>
+
+  <li>
+    <strong>Status:</strong>
+    <%= @timesheet.status %>
+  </li>
+
+  <li>
+    <strong>Total hours:</strong>
+    <%= @timesheet.total_hours %>
+  </li>
+ 
+  <li> 
+    <strong>Worker:</strong>
+    <%= TimesheetApp.Users.get_user(@timesheet.user_id).name %>
+  </li>
+</ul>
+
+<h2>Tasks</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Job Code</th>
+      <th>Job Name</th>
+      <th>Hours Worked</th>
+      <th>Note</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <%= for task <- @timesheet.tasks do %>
+    <tr>
+      <td> <%= TimesheetApp.Tasks.get_task!(task.id).job.job_code %> </td>
+      <td> <%= TimesheetApp.Tasks.get_task!(task.id).job.name %> </td>
+      <td> <%= task.hours_worked %> </td>
+      <td> <%= task.note %> </td>      
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<br />
+
+<h4>Problems</h4>
+<ul>
+  <%= if @timesheet.total_hours > 8 do %>
+    <li><strong>Over time</strong>: Time sheet totals more than 8 hours.</li>
+  <% end %>
+
+  <%= if @timesheet.total_hours < 8 do %>
+    <li><strong>Underbilled</strong>: Time sheet totals less than 8 hours.</li>
+  <% end %>
+
+  <%= for task <- @timesheet.tasks do %>
+    <%= if TimesheetApp.Jobs.get_hours_left(TimesheetApp.Tasks.get_task!(task.id).job.id) < 0 do %>
+      <li><strong>Overbilled Job</strong>:
+        <%= TimesheetApp.Tasks.get_task!(task.id).job.job_code%>
+        <span> </span>
+        <%= TimesheetApp.Tasks.get_task!(task.id).job.name%>
+        <span> is</span>
+        <%= 0 - TimesheetApp.Jobs.get_hours_left(TimesheetApp.Tasks.get_task!(task.id).job.id)  %>
+        <span> hours overbilled.</span>
+      </li>
+    <% end %>
+  <% end %>
+</ul>
+<br />
+
+<%= if @current_user.is_manager do %> 
+  <%= link "Edit Timesheet", to: Routes.timesheet_path(@conn, :edit, @timesheet) %> |
+  <%= link "Delete Timesheet", to: Routes.timesheet_path(@conn, :delete, @timesheet),
+             method: :delete, data: [confirm: "Are you sure?"] %> |
+  <%= link "Back", to: Routes.user_path(@conn, :show_manager_timesheets, @current_user) %>
+<% else %>
+  <%= link "Back", to: Routes.user_path(@conn, :show, @current_user) %>
+<% end %>
