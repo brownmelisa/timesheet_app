@@ -156,20 +156,20 @@ defmodule TimesheetApp.Users do
   
   # get all manager ids
   def get_manager_names!() do
-    managers_list = Repo.all(from u in User, where: u.is_manager == true)
+    Repo.all(from u in User, where: u.is_manager == true)
     |> Enum.map(fn x -> x.name end)
 #    ["NA"| managers_list]
   end
 
   # get all manager ids
   def get_manager_ids!() do
-    managers_list = Repo.all(from u in User, where: u.is_manager == true)
+    Repo.all(from u in User, where: u.is_manager == true)
     |> Enum.map(fn x -> x.id end)
   end
 
   # get all worker names
   def get_worker_names!() do
-    workers_list = Repo.all(from u in User, where: u.is_manager == false)
+    Repo.all(from u in User, where: u.is_manager == false)
     |> Enum.map(fn x -> x.name end)
   end
 

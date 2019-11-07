@@ -21,7 +21,7 @@
               <li class="nav-item">
                 <%= if @current_user.is_manager do %>
                   <%= link( "All Users", to: Routes.user_path(@conn, :index)) %>
-                <%= end %>
+                <% end %>
               </li>
             </ul>
           </div>
@@ -31,7 +31,7 @@
               <li class="nav-item">
                 <%= if @current_user.is_manager do %>
                   <%= link( "All Jobs", to: Routes.job_path(@conn, :index)) %>
-                <%= end %>
+                <% end %>
               </li>
             </ul>
           </div>
@@ -42,10 +42,10 @@
                 <%= if @current_user.is_manager do %>
                   <%= link( "Manage Timesheets", to: Routes.user_path(@conn,
                     :show_manager_timesheets, @current_user)) %>
-                <%= else %>
+                <% else %>
                   <%= link( "My Timesheets", to: Routes.user_path(@conn, :show,
                     @current_user)) %>
-                <%= end %>
+                <% end %>
               </li>
             </ul>  
           </div>
