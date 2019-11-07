@@ -1,0 +1,23 @@
+Web Dev Fall 2019 HW06 Status
+
+Answer the following questions:
+
+
+1. What's your name?
+Melisa Brown
+
+2. What's the URL of the github repo with your work for this HW?
+https://github.com/brownmelisa/timesheet_app
+
+3. What's the version number of your github release?
+there's only one version
+
+4. What's the URL that you deployed to?
+time1.mochiswebforge.site
+
+5. Is your app functionality complete? If not, what's missing?
+yes
+
+6. Is your app properly deployed? If not, what went wrong?
+yes
+
